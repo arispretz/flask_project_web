@@ -202,7 +202,7 @@ def about():
 @app.route('/api')
 def api():
     name = '30 Days Of Python Programming'
-    return render_template('api.html', name = name, title = 'api')
+    return render_template('api.html', name = name, title = 'API')
 
 @app.route('/feedback')
 def feedback():
