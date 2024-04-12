@@ -199,10 +199,10 @@ def about():
     name = '30 Days Of Python Programming'
     return render_template('about.html', name = name, title = 'About')
 
-@app.route('/API')
-def API():
+@app.route('/api')
+def api():
     name = '30 Days Of Python Programming'
-    return render_template('API.html', name = name, title = 'API')
+    return render_template('api.html', name = name, title = 'api')
 
 @app.route('/feedback')
 def feedback():
