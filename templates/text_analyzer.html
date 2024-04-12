@@ -1,0 +1,15 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="container">
+  <h1>Text Analyzer</h1>
+    
+    <form action="" method="POST">
+        <div>
+            <textarea class = "text-analyzer-text-area" rows='25' cols="120" name="content" placeholder ="Write text or copy and paste text to analyse ..." autofocus></textarea>
+        </div>
+        <div>
+            <input type='submit' class="btn" value="Process Text" />
+        </div>
+    </form>
+</div>
+
+{% endblock %}
