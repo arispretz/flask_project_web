@@ -40,3 +40,13 @@ git push -u origin master o main segun sea necesario
 Debes usar git pull cuando quieres traer los cambios remotos a tu repositorio local.
 git pull origin main
 
+subir proyecto a render.com:
+nuevo web service
+nombre del proyecto
+region
+branch master
+build command pip install -r requirements.txt
+start command gunicorn your_application.wsgi
+free
+python version = 3.10.6
+variables de entorno agregar
