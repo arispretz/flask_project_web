@@ -345,3 +345,32 @@ if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
     
+    
+    '''
+    flask_project_web
+        static
+            css
+                form.css
+                main.css
+                sentiment.css
+            files
+                sentiment_bar_chart.jpg
+                sentiment_pie_chart.jpg
+        templates
+            about.html
+            API.html
+            feedback.html
+            join.html
+            layout.html
+            result.html
+            students.html
+            text_analyzer.html
+        venv
+        
+        .env
+        .gitattributes
+        .gitignore
+        app.py
+        Procfile
+        requirements.txt
+        '''
