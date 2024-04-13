@@ -224,10 +224,10 @@ def result():
     return render_template('result.html')
 
 @app.route('/post', methods= ['GET','POST'])
-def post():
+def text_analyzer():
     name = 'Text Analyzer'
     if request.method == 'GET':
-         return render_template('post.html', name = name, title = name)
+         return render_template('text_analyzer.html', name = name, title = name)
     if request.method =='POST':
         content = request.form['content']
         cleaned_text = cleaning_text(content)
@@ -373,4 +373,6 @@ if __name__ == '__main__':
         app.py
         Procfile
         requirements.txt
+        
+       
         '''
