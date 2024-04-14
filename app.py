@@ -261,12 +261,12 @@ def text_analyzer():
 # Creating database
 db = client.text_analyzer_and_students
 # Creating students collection and inserting a document
-db.students.insert_one({'name': 'Ariana', 'date of birth': 06/18/1979, 'country': 'Argentina', 'city': 'San Lorenzo', 'skills':['HTML', 'CSS','JavaScript','Python'], 'bio': 'Developer'})
+db.students.insert_one({'name': 'Ariana', 'date of birth': 6/18/1979, 'country': 'Argentina', 'city': 'San Lorenzo', 'skills':['HTML', 'CSS','JavaScript','Python'], 'bio': 'Developer'})
 print(client.list_database_names())
 
 students = [
-        {'name':'David', 'date of birth': 01/10/1990, 'country':'UK', 'city':'London', 'skills':['HTML', 'CSS','JavaScript','Python'], 'bio': 'Developer'},
-        {'name':'John', 'date of birth': 04/09/1996, 'country':'Sweden', 'city':'Stockholm', 'skills':['Python','MongoDB'], 'bio': 'Developer'},
+        {'name':'David', 'date of birth': 1/10/1990, 'country':'UK', 'city':'London', 'skills':['HTML', 'CSS','JavaScript','Python'], 'bio': 'Developer'},
+        {'name':'John', 'date of birth': 4/9/1996, 'country':'Sweden', 'city':'Stockholm', 'skills':['Python','MongoDB'], 'bio': 'Developer'},
         {'name':'Sam', 'date of birth': 11/21/1999, 'country':'Finland', 'city':'Helsinki', 'skills':['Java','C#'], 'bio': 'Developer'},
     ]
 for student in students:
