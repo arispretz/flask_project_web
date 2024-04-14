@@ -1,0 +1,13 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="sentiments">
+    <form action="{{ url_for('update_feedback', feedback_id=feedback.id) }}" method="POST">
+        <div class="form-group">
+            <label for="feedback">Edit your feedback</label>
+            <textarea id="feedback" class="feedback" rows='8' cols="140" name="feedback" placeholder="Write updated feedback...">{{ feedback.text }}</textarea>
+        </div>
+        <div>
+            <button type="submit" class="btn">Update</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

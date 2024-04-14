@@ -245,7 +245,7 @@ def show_students_list():
 def result():
     return render_template('result.html')
 
-@app.route('/post', methods= ['GET','POST'])
+@app.route('/text_analyzer', methods= ['GET','POST'])
 def text_analyzer():
     name = 'Text Analyzer'
     if request.method == 'GET':
@@ -377,6 +377,14 @@ def modify_student(id):
 def delete_student (id):
     db.students.delete_one({"_id":ObjectId(id)})
     return
+
+@app.route('/feedback/<feedback_id>/update', methods=['POST'])
+def update_feedback(feedback_id):
+    text = request.form['text']
+    db.feedbacks.update_one({'_id': ObjectId(feedback_id)}, {'$set': {'text': text}})
+    return redirect(url_for('feedback'))
+
+
     
 if __name__ == '__main__':
     # for deployment
