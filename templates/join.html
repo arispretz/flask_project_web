@@ -1,6 +1,7 @@
 {% extends 'layout.html' %} {% block content %}
 <div class="container">
-    <form action="/api/v1.0/students" method="POST">
+    <form method="POST" action="{{ url_for('create_student') }}">
+
         <div class="form-row">
             <div class="form-group">
                 <label for="name">Name:</label>

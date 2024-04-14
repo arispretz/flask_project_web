@@ -9,6 +9,7 @@ from collections import Counter
 import json
 from bson.json_util import dumps
 from datetime import datetime
+from flask import jsonify
 
 
 # Create an instance of the `Env` class
@@ -146,7 +147,6 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 
-
 def cleaning_text(text):
     # Convertir todas las letras a minúsculas
     text = text.lower()
@@ -214,10 +214,32 @@ def join():
     name = '30 Days Of Python Programming'
     return render_template('join.html', name = name, title = 'Join')
 
-@app.route('/students')
-def students():
-    name = '30 Days Of Python Programming'
-    return render_template('students.html', name = name, title = 'Students')
+db = client['text_analyzer_and_students']  # Reemplaza 'nombre_de_tu_base_de_datos' por el nombre de tu base de datos
+collection = db['students']  # Reemplaza 'nombre_de_tu_coleccion' por el nombre de tu colección
+
+@app.route('/students/list', methods=['GET'])
+def show_students_list():
+    # Obtener todos los estudiantes de la colección
+    students = collection.find()
+
+    # Crear una lista para almacenar los datos de los estudiantes
+    students_list = []
+
+    # Iterar sobre los estudiantes y añadir sus datos a la lista
+    for student in students:
+        students_list.append({
+            'name': student['name'],
+            'dateofbirth': student['dateofbirth'],
+            'country': student['country'],
+            'city': student['city'],
+            'skills': student['skills'],
+            'bio': student['bio'],
+            'created_at': student['created_at'],
+            # Agrega más campos según tu estructura de datos
+        })
+
+    # Renderizar la plantilla con la lista de estudiantes
+    return render_template('students.html', title='Students List', students=students_list)
 
 @app.route('/result')
 def result():
@@ -239,25 +261,36 @@ def text_analyzer():
 # Creating database
 db = client.text_analyzer_and_students
 # Creating students collection and inserting a document
-db.students.insert_one({'name': 'Ariana', 'country': 'Argentina', 'city': 'San Lorenzo', 'age': 44, 'skills':['HTML', 'CSS','JavaScript','Python']})
+db.students.insert_one({'name': 'Ariana', 'date of birth': 06/18/1979, 'country': 'Argentina', 'city': 'San Lorenzo', 'skills':['HTML', 'CSS','JavaScript','Python'], 'bio': 'Developer'})
 print(client.list_database_names())
 
 students = [
-        {'name':'David','country':'UK','city':'London','age':34, 'skills':['HTML', 'CSS','JavaScript','Python']},
-        {'name':'John','country':'Sweden','city':'Stockholm','age':28, 'skills':['Python','MongoDB']},
-        {'name':'Sam','country':'Finland','city':'Helsinki','age':25, 'skills':['Java','C#']},
+        {'name':'David', 'date of birth': 01/10/1990, 'country':'UK', 'city':'London', 'skills':['HTML', 'CSS','JavaScript','Python'], 'bio': 'Developer'},
+        {'name':'John', 'date of birth': 04/09/1996, 'country':'Sweden', 'city':'Stockholm', 'skills':['Python','MongoDB'], 'bio': 'Developer'},
+        {'name':'Sam', 'date of birth': 11/21/1999, 'country':'Finland', 'city':'Helsinki', 'skills':['Java','C#'], 'bio': 'Developer'},
     ]
 for student in students:
     db.students.insert_one(student)
     
 db = client['students']
 
-@app.route('/api/v1.0/students', methods=['GET'])
+@app.route('/get_students')
 def get_students():
     students = db.students.find()
-    # Convertir el ObjectId a cadena (string)
-    students = [student.update({'_id': str(student['_id'])}) or student for student in students]
-    return Response(json.dumps(students), mimetype='application/json')
+    formatted_students = [
+        {
+            'id': str(student['_id']),  # Convertir el _id en una cadena
+            'name': student['name'],
+            'dateofbirth': student['dateofbirth'],
+            'country': student['country'],
+            'city': student['city'],
+            'skills': student['skills'],
+            'bio': student['bio'],
+            'created_at': student['created_at'],
+        }
+        for student in students
+    ]
+    return render_template('students.html', students=formatted_students)
 
 
 @app.route('/api/v1.0/students/<id>', methods = ['GET'])
@@ -265,42 +298,49 @@ def single_student (id):
     student = db.students.find({'_id':ObjectId(id)})
     return Response(dumps(student), mimetype='application/json')
 
-@app.route('/api/v1.0/students', methods = ['POST'])
-def create_student ():
+@app.route('/create_student', methods=['POST'])
+def create_student():
+    # Obtener los datos del formulario
     name = request.form['name']
+    dateofbirth = request.form['dateofbirth']
     country = request.form['country']
     city = request.form['city']
     skills = request.form['skills'].split(', ')
     bio = request.form['bio']
-    birthyear = request.form['birthyear']
     created_at = datetime.now()
+
+    # Crear el objeto del estudiante
     student = {
         'name': name,
+        'dateofbirth': dateofbirth,
         'country': country,
         'city': city,
-        'birthyear': birthyear,
         'skills': skills,
         'bio': bio,
         'created_at': created_at
-
     }
+
+    # Insertar el estudiante en la base de datos
     db.students.insert_one(student)
-    return 
+
+    # Devolver una respuesta con el objeto del estudiante creado
+    return jsonify({'message': 'Student created successfully', 'student': student}), 201
+
 @app.route('/api/v1.0/students/<id>', methods = ['PUT']) # this decorator create the home route
 def update_student (id):
     query = {"_id":ObjectId(id)}
     name = request.form['name']
+    dateofbirth = request.form['dateofbirth']
     country = request.form['country']
     city = request.form['city']
     skills = request.form['skills'].split(', ')
     bio = request.form['bio']
-    birthyear = request.form['birthyear']
     created_at = datetime.now()
     student = {
         'name': name,
+        'dateofbirth': dateofbirth,
         'country': country,
         'city': city,
-        'birthyear': birthyear,
         'skills': skills,
         'bio': bio,
         'created_at': created_at
@@ -308,31 +348,30 @@ def update_student (id):
     }
     db.students.update_one(query, student)
     # return Response(dumps({"result":"a new student has been created"}), mimetype='application/json')
-    return
+    return jsonify({'message': 'Student updated successfully', 'student': student}), 200
 
-@app.route('/api/v1.0/students/<id>', methods = ['PUT']) # this decorator create the home route
-def modify_student (id):
-    query = {"_id":ObjectId(id)}
+@app.route('/api/v1.0/students/<id>/modify', methods=['PUT'])
+def modify_student(id):
+    query = {"_id": ObjectId(id)}
     name = request.form['name']
+    dateofbirth = request.form['dateofbirth']
     country = request.form['country']
     city = request.form['city']
     skills = request.form['skills'].split(', ')
     bio = request.form['bio']
-    birthyear = request.form['birthyear']
     created_at = datetime.now()
     student = {
         'name': name,
+        'dateofbirth': dateofbirth,
         'country': country,
         'city': city,
-        'birthyear': birthyear,
         'skills': skills,
         'bio': bio,
         'created_at': created_at
-
     }
     db.students.update_one(query, student)
-    # return Response(dumps({"result":"a new student has been created"}), mimetype='application/json')
-    return 
+    return jsonify({'message': 'Student modified successfully', 'student': student}), 200
+
 
 @app.route('/api/v1.0/students/<id>', methods = ['DELETE'])
 def delete_student (id):
@@ -374,5 +413,7 @@ if __name__ == '__main__':
         Procfile
         requirements.txt
         
-       
-        '''
+      en join puede ser esto:
+              <form method="POST" action="{{ url_for('create_student') }}">
+
+  '''
