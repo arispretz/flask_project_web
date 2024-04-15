@@ -199,7 +199,7 @@ def about():
     name = '30 Days Of Python Programming'
     return render_template('about.html', name = name, title = 'About')
 
-@app.route('/API')
+'''@app.route('/API')
 def API():
     name = '30 Days Of Python Programming'
     return render_template('API.html', name = name, title = 'API')
@@ -240,7 +240,7 @@ def show_students_list():
 
     # Renderizar la plantilla con la lista de estudiantes
     return render_template('students.html', title='Students List', students=students_list)
-
+'''
 @app.route('/result')
 def result():
     return render_template('result.html')
@@ -257,7 +257,7 @@ def text_analyzer():
         characters_count = counting_characters(content)
         frequent_words = more_frequent_words(content)
         return render_template('result.html', content=content, cleaned_text=cleaned_text, words_count=words_count, characters_count=characters_count, frequent_words=frequent_words)
-
+'''
 # Creating database
 db = client.text_analyzer_and_students
 # Creating students collection and inserting a document
@@ -384,7 +384,7 @@ def update_feedback(feedback_id):
     db.feedbacks.update_one({'_id': ObjectId(feedback_id)}, {'$set': {'text': text}})
     return redirect(url_for('feedback'))
 
-
+'''
     
 if __name__ == '__main__':
     # for deployment
