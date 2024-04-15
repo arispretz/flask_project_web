@@ -245,7 +245,7 @@ def show_students_list():
 def result():
     return render_template('result.html')
 
-@app.route('/text_analyzer', methods= ['GET','POST'])
+@app.route('/post', methods= ['GET','POST'])
 def text_analyzer():
     name = 'Text Analyzer'
     if request.method == 'GET':
